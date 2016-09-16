@@ -25,8 +25,8 @@ public class Invert {
 	static HashMap<String, Integer> rainbow_table2;
 	static BitSet bs2;    // indicate which head is used
 	static byte[][] m = new byte[5000][20];
-	static final int L_CHAIN = 180;   		  //chain length
-	static final int N_CHAIN = 110000;         // number of chains
+	static final int L_CHAIN = 206;   		  //chain length
+	static final int N_CHAIN = 95000;         // number of chains
 	static final String table_fileName = "RAINBOW"; // Rainbow Table File Name
 	static final String table_head_fileName = "RAINBOW_HEAD"; // Rainbow Table File Name
 	static final String table_fileName2 = "RAINBOW2"; // Rainbow Table File Name

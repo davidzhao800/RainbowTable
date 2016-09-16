@@ -1,6 +1,8 @@
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -14,8 +16,8 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 public class RainbowTable {
 	private MessageDigest SHA1; 
-	static final int L_CHAIN = 180;   		  //chain length
-	static final int N_CHAIN = 110000;         // number of chains
+	static final int L_CHAIN = 206;   		  //chain length
+	static final int N_CHAIN = 95000;         // number of chains
 	static final String fileName = "RAINBOW"; // Rainbow Table File Name
 	static final String headFileName = "RAINBOW_HEAD"; // Rainbow Table File Name
 	static final String fileName2 = "RAINBOW2"; // Rainbow Table File Name
@@ -126,10 +128,11 @@ public class RainbowTable {
 					//outputFile.write(pair.getValue().toString() + " " + pair.getKey() + "\n");
 					outputFile.write(pair.getKey() + "\n");
 				}
-				//outputFile.write(String.valueOf((convert(bitset))));
-//				for (byte x : bitset.toByteArray()) outputFile.write(String.valueOf(x) + "  ");
+				
 				outputFile.close();
+				
 			} else {
+				
 				O = new ObjectOutputStream(new FileOutputStream(headFileName2));
 				O.writeObject(bitset2);
 				O.close();
@@ -139,8 +142,7 @@ public class RainbowTable {
 					//outputFile.write(pair.getValue().toString() + " " + pair.getKey() + "\n");
 					outputFile.write(pair.getKey() + "\n");
 				}
-				//outputFile.write(String.valueOf((convert(bitset))));
-//				for (byte x : bitset.toByteArray()) outputFile.write(String.valueOf(x) + "  ");
+				
 				outputFile.close();
 			}
 		        

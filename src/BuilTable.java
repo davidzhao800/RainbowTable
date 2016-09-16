@@ -2,6 +2,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.BitSet;
 
 public class BuilTable {
@@ -10,28 +12,36 @@ public class BuilTable {
 		RainbowTable table = new RainbowTable();
 		table.build_T(1);
 		table.build_T(2);
+
+//		BitSet bs = new BitSet();
+//		bs.set(2);
+//		bs.set(4);
+//		bs.set(6);
+//		System.out.println(bs.toByteArray());
+//		byte[] a = bs.toByteArray();
+//		
+//		BitSet bs2 = fromByteArray(a);
+//		System.out.println(bs2.toString());
+//		
 //		try {
-//			ObjectInputStream ois = new ObjectInputStream(new FileInputStream("RAINBOW"));
-//			BitSet bs = (BitSet) ois.readObject();
-//			System.out.println(bs.toString());
-//
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			Files.write(Paths.get("bytearray"), a);
+//			byte[] data = Files.readAllBytes(Paths.get("bytearray"));
+//			BitSet bs3 = fromByteArray(data);
+//			System.out.println(bs3.toString());
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
 //		}
-//		String s = "7477178117683218292";
-//		Long i = Long.parseLong(s);
-//		System.out.println(i);
-//		BitSet bs = convert(i);
-//		
-//		
-//		System.out.println(bs.toString());
 		
 	}
+	
+//	public static BitSet fromByteArray(byte[] bytes) {
+//		BitSet bits = new BitSet();
+//		for (int i = 0; i < bytes.length * 8; i++) {
+//			if ((bytes[bytes.length - i / 8 - 1] & (1 << (i % 8))) > 0) {
+//				bits.set(i);
+//			}
+//		}
+//		return bits;
+//	}
 }
