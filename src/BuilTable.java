@@ -1,10 +1,13 @@
+import java.awt.List;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 
 public class BuilTable {
 
@@ -12,7 +15,21 @@ public class BuilTable {
 		RainbowTable table = new RainbowTable();
 		table.build_T(1);
 		table.build_T(2);
-
+		
+//		ArrayList<Integer> l = new ArrayList<Integer>();
+//		
+//		for (int i=0; i<20; i++){
+//			l.add(i);
+//		}
+//		ArrayList<Integer> l2 = l;
+//		ArrayList<Integer> l3 = l;
+//		Collections.shuffle(l);
+//		Collections.shuffle(l2);
+//		Collections.shuffle(l3);
+//		System.out.println(l);
+//		System.out.println(l2);
+//		System.out.println(l3);
+		
 //		BitSet bs = new BitSet();
 //		bs.set(2);
 //		bs.set(4);

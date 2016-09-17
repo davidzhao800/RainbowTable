@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 public class RainbowTable {
 	private MessageDigest SHA1; 
 	static final int L_CHAIN = 206;   		  //chain length
-	static final int N_CHAIN = 95000;         // number of chains
+	static final int N_CHAIN = 91500;         // number of chains
 	static final String fileName = "RAINBOW"; // Rainbow Table File Name
 	static final String headFileName = "RAINBOW_HEAD"; // Rainbow Table File Name
 	static final String fileName2 = "RAINBOW2"; // Rainbow Table File Name
@@ -126,7 +127,7 @@ public class RainbowTable {
 				Set<Entry<String, Integer>> entrySet = table.entrySet();
 				for (Entry<String, Integer> pair : entrySet) {
 					//outputFile.write(pair.getValue().toString() + " " + pair.getKey() + "\n");
-					outputFile.write(pair.getKey() + "\n");
+					outputFile.write(pair.getKey());
 				}
 				
 				outputFile.close();
@@ -140,7 +141,7 @@ public class RainbowTable {
 				Set<Entry<String, Integer>> entrySet = table2.entrySet();
 				for (Entry<String, Integer> pair : entrySet) {
 					//outputFile.write(pair.getValue().toString() + " " + pair.getKey() + "\n");
-					outputFile.write(pair.getKey() + "\n");
+					outputFile.write(pair.getKey());
 				}
 				
 				outputFile.close();
@@ -162,7 +163,9 @@ public class RainbowTable {
 		}
 		return digest;
 	}
-	
+	//1 - 3: 90.84%
+	//2 - 3: 90.02%
+	//1 - 2: 90.06%
 	private byte[] reduce(byte[] digest, int i) {
 		byte[] word = new byte[3];
 		word[0] = (byte) ((digest[0] + (byte) i) % 256);
@@ -170,14 +173,23 @@ public class RainbowTable {
 		word[2] = (byte) ((digest[2]) % 256);
 		return word;
 	}
-	
-	public byte[] reduce2(byte[] digest, int i) {
+	//2
+	public byte[] reduce3(byte[] digest, int i) {
 		byte last_byte = (byte) i;
 		byte[] word = new byte[3];
 		for (int j = 0; j < word.length; j++) {
 			word[j] = (byte) (digest[(i + j) % 20] + last_byte);
 		}
 		return word;
+	}
+	//3
+	public byte[] reduce2(byte[] digest, int i) {
+		int start = i % 17;
+		byte[] reduced = Arrays.copyOfRange(digest, start, start + 3);
+		reduced[0] += (71 * i) % 251;
+		reduced[1] += (107 * i) % 251;
+		reduced[2] += (197 * i) % 251;
+		return reduced;
 	}
 	
 	private byte[] integerToBytes(int n) {

@@ -26,7 +26,7 @@ public class Invert {
 	static BitSet bs2;    // indicate which head is used
 	static byte[][] m = new byte[5000][20];
 	static final int L_CHAIN = 206;   		  //chain length
-	static final int N_CHAIN = 95000;         // number of chains
+	static final int N_CHAIN = 91500;         // number of chains
 	static final String table_fileName = "RAINBOW"; // Rainbow Table File Name
 	static final String table_head_fileName = "RAINBOW_HEAD"; // Rainbow Table File Name
 	static final String table_fileName2 = "RAINBOW2"; // Rainbow Table File Name
@@ -42,11 +42,6 @@ public class Invert {
 			rainbow_table = new HashMap<String, Integer>();
 			rainbow_table2 = new HashMap<String, Integer>();
 			readT();
-//			System.out.println(rainbow_table.size());
-//			Set<Entry<String, Integer>> entrySet = rainbow_table.entrySet();
-//			for (Entry<String, Integer> pair : entrySet) {
-//				System.out.println(pair.getValue().toString() + " " + pair.getKey() + "\n");
-//			}
 			invert();
 			writeToFile();
 		} catch (Exception e) {
@@ -72,25 +67,50 @@ public class Invert {
 		
 		String line;
 		int i = 0;
-		while ((line = br.readLine()) != null) {
+		line = br.readLine();
+		String[] tmp = line.split("(?<=\\G.{6})");
+		
+		for( String x: tmp){
 			while (!bs.get(i)) {
 				i = i + 1;
 			}
-			rainbow_table.put(line, i);
+			rainbow_table.put(x, i);
 			i = i+1;
-			// key is the digest and value is word in Integer
-			// written as word : digest in file hence stored in opposite way
 		}
+		
+		
+		String line2;
 		i=0;
-		while ((line = br2.readLine()) != null) {
+		line2 = br2.readLine();
+		String[] tmp2 = line2.split("(?<=\\G.{6})");
+		
+		for( String x: tmp2){
 			while (!bs2.get(i)) {
 				i = i + 1;
 			}
-			rainbow_table2.put(line, i);
+			rainbow_table2.put(x, i);
 			i = i+1;
-			// key is the digest and value is word in Integer
-			// written as word : digest in file hence stored in opposite way
 		}
+		
+//		while ((line = br.readLine()) != null) {
+//			while (!bs.get(i)) {
+//				i = i + 1;
+//			}
+//			rainbow_table.put(line, i);
+//			i = i+1;
+//			// key is the digest and value is word in Integer
+//			// written as word : digest in file hence stored in opposite way
+//		}
+//		i=0;
+//		while ((line = br2.readLine()) != null) {
+//			while (!bs2.get(i)) {
+//				i = i + 1;
+//			}
+//			rainbow_table2.put(line, i);
+//			i = i+1;
+//			// key is the digest and value is word in Integer
+//			// written as word : digest in file hence stored in opposite way
+//		}
 		br2.close();
 		br.close();
 	}
@@ -235,7 +255,7 @@ public class Invert {
 		}
 		return digest;
 	}
-	
+	//1
 	private static byte[] reduce(byte[] digest, int i) {
 		byte[] word = new byte[3];
 		word[0] = (byte) ((digest[0] + (byte) i) % 256);
@@ -243,14 +263,23 @@ public class Invert {
 		word[2] = (byte) ((digest[2]) % 256);
 		return word;
 	}
-	
-	public static byte[] reduce2(byte[] digest, int i) {
+	//2
+	public static byte[] reduce3(byte[] digest, int i) {
 		byte last_byte = (byte) i;
 		byte[] word = new byte[3];
 		for (int j = 0; j < word.length; j++) {
 			word[j] = (byte) (digest[(i + j) % 20] + last_byte);
 		}
 		return word;
+	}
+	//3
+	public static byte[] reduce2(byte[] digest, int i) {
+		int start = i % 17;
+		byte[] reduced = Arrays.copyOfRange(digest, start, start + 3);
+		reduced[0] += (71 * i) % 251;
+		reduced[1] += (107 * i) % 251;
+		reduced[2] += (197 * i) % 251;
+		return reduced;
 	}
 	
 	private static byte[] integerToBytes(int n) {
