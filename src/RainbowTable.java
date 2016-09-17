@@ -17,8 +17,8 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 public class RainbowTable {
 	private MessageDigest SHA1; 
-	static final int L_CHAIN = 206;   		  //chain length
-	static final int N_CHAIN = 91500;         // number of chains
+	static final int L_CHAIN = 220;   		  //chain length
+	static final int N_CHAIN = 88000;         // number of chains
 	static final String fileName = "RAINBOW"; // Rainbow Table File Name
 	static final String headFileName = "RAINBOW_HEAD"; // Rainbow Table File Name
 	static final String fileName2 = "RAINBOW2"; // Rainbow Table File Name
