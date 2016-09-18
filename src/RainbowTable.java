@@ -1,14 +1,15 @@
+/**
+ * @author zhao hang
+ * For CS4236 Assignment 1
+ */
+
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,17 +18,17 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 public class RainbowTable {
 	private MessageDigest SHA1; 
-	static final int L_CHAIN = 220;   		  //chain length
-	static final int N_CHAIN = 88000;         // number of chains
-	static final String fileName = "RAINBOW"; // Rainbow Table File Name
-	static final String headFileName = "RAINBOW_HEAD"; // Rainbow Table File Name
-	static final String fileName2 = "RAINBOW2"; // Rainbow Table File Name
-	static final String headFileName2 = "RAINBOW_HEAD2"; // Rainbow Table File Name
-	private LinkedHashMap<String, Integer> table;
-	private LinkedHashMap<String, Integer> table2;
-	//private LinkedHashMap<Integer, String> rev_table;
-	private BitSet bitset; // for record which integer is included in the map
-	private BitSet bitset2;
+	static final int L_CHAIN = 220;   		                 //chain length
+	static final int N_CHAIN = 88700;                        // number of chains
+	static final String fileName = "RAINBOW";                // Rainbow Table 1 File Name
+	static final String headFileName = "RAINBOW_HEAD";       // Rainbow Table 1 HEAD File Name
+	static final String fileName2 = "RAINBOW2";              // Rainbow Table 2 File Name
+	static final String headFileName2 = "RAINBOW_HEAD2";     // Rainbow Table 2 HEAD File Name
+	private LinkedHashMap<String, Integer> table;            // store rainbow table 1
+	private LinkedHashMap<String, Integer> table2;			 // store rainbow table 2
+	
+	private BitSet bitset;                                   // store head for rainbow table 1
+	private BitSet bitset2;									 // store head for rainbow table 2
 	
 	public RainbowTable() {
 		table = new LinkedHashMap<String, Integer>();
@@ -44,6 +45,7 @@ public class RainbowTable {
 
 	}
 
+	// use sequenced integer to convert to 3-byte word as head
 	public void build_T(int choice) {
 		try {
 			byte[] word;
@@ -63,19 +65,16 @@ public class RainbowTable {
 						word = reduce(digest, j);
 					}
 					key = byteToHex.marshal(word);
-
-					// storing the final digest and word
-
+					
+					// store the tail
 					if (!table.containsKey(key)) {
 						table.put(key, i);
 
 						bitset.set(i);
-						System.out.println(i);
+						//System.out.println(i);
 						success++;
-						System.out.println("This is :" + success);
+						//System.out.println("This is :" + success);
 					} else {
-						// System.out.println(i);
-						// rev_table.put(i, "XXXXXX");
 						collision++;
 					}
 					i = i + 1;
@@ -92,61 +91,59 @@ public class RainbowTable {
 
 					}
 					key = byteToHex.marshal(word);
-
-					// storing the final digest and word
-
+					
+					// store the tail
 					if (!table2.containsKey(key)) {
 						table2.put(key, i);
 
 						bitset2.set(i);
-						System.out.println(i);
+						//System.out.println(i);
 						success++;
-						System.out.println("This is :" + success);
+						//System.out.println("This is :" + success);
 					} else {
-						// System.out.println(i);
-						// rev_table.put(i, "XXXXXX");
 						collision++;
 					}
 					i = i + 1;
 				}
 			}
-				
-			//System.out.println(N_CHAIN + "    " + table.size());
 			
-			// --- Write to the output file
-			// note that to reduce the size of the table, it is not neccessary
-			// to write the full digest.
+			System.out.println("Rainbow Table created, got collisions: " + collision +", writing to files...");
 			
+			// Write to file
 		    ObjectOutputStream O;
 		    
 			if (choice == 1) {
+				
+				// Write to the bitset containing information of head into head file
 				O = new ObjectOutputStream(new FileOutputStream(headFileName));
 				O.writeObject(bitset);
 				O.close();
+				
+				// Only write digest to table file
 				FileWriter outputFile = new FileWriter(fileName);
 				Set<Entry<String, Integer>> entrySet = table.entrySet();
 				for (Entry<String, Integer> pair : entrySet) {
-					//outputFile.write(pair.getValue().toString() + " " + pair.getKey() + "\n");
 					outputFile.write(pair.getKey());
 				}
-				
 				outputFile.close();
 				
 			} else {
 				
+				// Write to the bitset containing information of head into head file
 				O = new ObjectOutputStream(new FileOutputStream(headFileName2));
 				O.writeObject(bitset2);
 				O.close();
+				
+				// Only write digest to table file
 				FileWriter outputFile = new FileWriter(fileName2);
 				Set<Entry<String, Integer>> entrySet = table2.entrySet();
 				for (Entry<String, Integer> pair : entrySet) {
-					//outputFile.write(pair.getValue().toString() + " " + pair.getKey() + "\n");
 					outputFile.write(pair.getKey());
 				}
-				
 				outputFile.close();
 			}
-		        
+			
+			System.out.println("Rainbow Table has been writen to file.");
 			
 		} catch (Exception e) {
 			System.out.println("Build Table Exception: " + e.getMessage());
